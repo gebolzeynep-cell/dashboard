@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16-Week Study Plan + Finals</title>
+<style>
+:root{
+  --bg:#f5f6f8; --card:#ffffff; --ink:#1a1f2b; --muted:#667085; --line:#e3e6ec; --soft:#eff1f5;
+  --accent:#2f6fed; --vize:#d92d20; --weekend:rgba(20,30,60,.045); --lab:#e7edf8; --labink:#3b4a68;
+  --free:#fff8e6; --freeline:#e8c96a; --shadow:0 1px 2px rgba(16,24,40,.06); --past:rgba(100,110,130,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14171d; --card:#1c2029; --ink:#e8eaf0; --muted:#98a1b3; --line:#2b3140; --soft:#252a36;
+    --accent:#6b9bff; --vize:#f97066; --weekend:rgba(255,255,255,.035); --lab:#232c40; --labink:#a9b8d6;
+    --free:#2a2616; --freeline:#7a6a2c; --shadow:none; --past:rgba(255,255,255,.05);
+  }
+}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+h1{margin:0;font-size:22px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin-top:2px}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;box-shadow:var(--shadow)}
+.btn:hover{border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.card .k{color:var(--muted);font-size:12px}
+.card .v{font-size:20px;font-weight:650;margin-top:2px}
+.card .s{color:var(--muted);font-size:12px;margin-top:2px}
+.pbar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;margin-top:8px}
+.pbar i{display:block;height:100%;background:hsl(var(--h,220) 65% 50%);border-radius:3px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;color:var(--muted);white-space:nowrap;font-weight:550}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--ink)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{color:var(--muted);font-size:12.5px;margin:8px 0 12px}
+
+/* ---------- Gantt ---------- */
+.gantt{--lab:260px;--dw:30px;--nd:126;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:74vh;box-shadow:var(--shadow)}
+.g-in{position:relative;width:calc(var(--lab) + var(--nd)*var(--dw))}
+.g-head{position:sticky;top:0;z-index:6;background:var(--card)}
+.g-row{display:flex;height:36px;border-bottom:1px solid var(--line)}
+.g-row.hd{height:26px}
+.g-label{position:sticky;left:0;z-index:4;width:var(--lab);flex:none;background:var(--card);padding:0 10px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--line);min-width:0}
+.g-head .g-label{z-index:7}
+.g-track{position:relative;flex:none;width:calc(var(--nd)*var(--dw));
+  background-image:
+    repeating-linear-gradient(to right,transparent 0,transparent calc(var(--dw) - 1px),var(--line) calc(var(--dw) - 1px),var(--line) var(--dw)),
+    repeating-linear-gradient(to right,transparent 0,transparent calc(var(--dw)*5),var(--weekend) calc(var(--dw)*5),var(--weekend) calc(var(--dw)*7))}
+.wk,.dy{flex:none;text-align:center;font-size:12px;border-right:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.wk{font-weight:600;white-space:nowrap}
+.wk.vz{color:var(--vize);background:rgba(217,45,32,.09)}
+.wk.past{color:var(--muted);font-weight:500}
+.dy{width:var(--dw);flex-direction:column;line-height:1.1;color:var(--muted);font-size:10px}
+.dy b{font-size:11px;color:var(--ink);font-weight:600}
+.dy.we{background:var(--weekend)}
+.dy.hol{background:rgba(217,45,32,.12)}
+.dy.td b{color:#fff;background:var(--accent);border-radius:8px;padding:0 4px}
+.g-ov{position:absolute;top:0;bottom:0;left:var(--lab);width:calc(var(--nd)*var(--dw));pointer-events:none;z-index:1}
+.g-ov .vz{position:absolute;top:0;bottom:0;background:rgba(217,45,32,.07);border-left:1.5px dashed var(--vize)}
+.g-ov .hol{position:absolute;top:0;bottom:0;background:rgba(217,45,32,.05)}
+.g-ov .past{position:absolute;top:0;bottom:0;left:0;background:var(--past)}
+.g-ov .now{position:absolute;top:0;bottom:0;width:2px;background:var(--accent)}
+.g-group{cursor:pointer;background:var(--soft)}
+.g-group .g-label{background:var(--soft);font-weight:650}
+.g-group:hover .g-label,.g-group:hover{filter:brightness(.98)}
+.dot{width:10px;height:10px;border-radius:50%;background:hsl(var(--h) 65% 50%);flex:none}
+.caret{width:12px;flex:none;color:var(--muted);font-size:10px;transition:transform .15s}
+.caret.open{transform:rotate(90deg)}
+.g-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.g-pct{color:var(--muted);font-size:12px;font-weight:500}
+.g-task .g-label{padding-left:34px;font-size:13px}
+.g-task .g-name small{display:block;color:var(--muted);font-size:11px;line-height:1.1}
+.bar{position:absolute;top:8px;height:20px;border-radius:5px;background:hsl(var(--h) 70% 50% / .25);border:1px solid hsl(var(--h) 70% 50% / .7);overflow:hidden;z-index:2}
+.bar i{position:absolute;inset:0 auto 0 0;background:hsl(var(--h) 70% 46%)}
+.bar span{position:absolute;left:6px;top:0;line-height:18px;font-size:11px;font-weight:650;color:var(--ink);text-shadow:0 0 3px var(--card),0 0 3px var(--card)}
+.bar.sum{top:13px;height:10px;border-radius:3px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}
+.legend b{display:inline-block;width:14px;height:10px;border-radius:3px;vertical-align:middle;margin-right:5px}
+
+/* ---------- Weekly schedule ---------- */
+.sch{display:grid;grid-template-columns:46px repeat(7,minmax(98px,1fr));min-width:760px}
+.sch-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto;box-shadow:var(--shadow)}
+.sch-h{padding:8px 4px;text-align:center;font-weight:600;border-bottom:1px solid var(--line);background:var(--card)}
+.sch-h.today{color:var(--accent)}
+.sch-col{position:relative;height:644px;border-left:1px solid var(--line);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 45px,var(--line) 45px,var(--line) 46px)}
+.sch-col.we{background-color:var(--weekend)}
+.sch-gut{position:relative;height:644px}
+.sch-gut span{position:absolute;right:6px;font-size:11px;color:var(--muted);transform:translateY(-50%)}
+.blk{position:absolute;left:3px;right:3px;border-radius:7px;padding:3px 6px;overflow:hidden;font-size:11.5px;line-height:1.25}
+.blk.cls{background:hsl(var(--h) 70% 50% / .22);border:1px solid hsl(var(--h) 70% 50% / .75);border-left:4px solid hsl(var(--h) 70% 48%)}
+.blk.cls b{display:block;font-size:12px}
+.blk.cls small{color:var(--muted);display:block}
+.blk.lab{background:var(--lab);color:var(--labink);border:1px solid var(--line);display:flex;align-items:center;gap:6px}
+.blk.free{background:var(--free);border:1px dashed var(--freeline);color:var(--muted);display:flex;align-items:center}
+.blk.lab em,.blk.free em{font-style:normal;opacity:.75}
+
+/* ---------- Lists ---------- */
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden}
+.gh{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;flex-wrap:wrap}
+.gh h3{margin:0;font-size:15px;flex:1;min-width:180px}
+.gh .pc{font-weight:650;min-width:42px;text-align:right}
+.gh .pb{width:140px}
+.meta{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px 34px}
+.tag{background:var(--soft);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--muted)}
+.gb{border-top:1px solid var(--line);padding:6px 14px 12px}
+.trow{display:flex;align-items:center;gap:10px;padding:8px 0;flex-wrap:wrap}
+.trow .tt{flex:1;min-width:160px;font-weight:600}
+.trow.done .tt{color:var(--muted);text-decoration:line-through}
+.dates{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:12px}
+input[type=date],input[type=text]{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+input[type=date]{font-size:12.5px}
+input[type=checkbox]{width:17px;height:17px;accent-color:hsl(var(--h,220) 65% 48%);flex:none;cursor:pointer}
+.mini{color:var(--muted);font-size:12px;min-width:34px;text-align:right}
+.ib{background:none;border:0;color:var(--muted);padding:2px 6px;border-radius:6px;font-size:15px;line-height:1}
+.ib:hover{background:var(--soft);color:var(--ink)}
+.subs{margin:0 0 6px 27px;padding-left:12px;border-left:2px solid hsl(var(--h) 60% 50% / .4)}
+.srow{display:flex;align-items:center;gap:9px;padding:3px 0}
+.srow.done span{color:var(--muted);text-decoration:line-through}
+.srow span{flex:1}
+form.add{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+form.add input[type=text]{flex:1;min-width:150px}
+form.add.task{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+@media (max-width:640px){.gantt{--lab:150px}.g-task .g-label{padding-left:22px}.gh .pb{width:90px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>16-Week Study Plan + Finals</h1>
+      <div class="sub">Semester: 14 Sep 2026 – 29 Dec 2026 · Midterms 31 Oct – 8 Nov · Finals 4 – 15 Jan 2027</div>
+    </div>
+    <button class="btn" data-act="reset" title="Resets all progress and edits to the original plan">Reset plan</button>
+  </header>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ===================== Data ===================== */
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const tm=s=>{const [h,m]=s.split(':').map(Number);return h*60+m};
+const dn=iso=>{const [y,m,d]=iso.split('-').map(Number);return Math.floor(Date.UTC(y,m-1,d)/864e5)};
+const fmt=n=>{const d=new Date(n*864e5);return d.getUTCDate()+' '+MON[d.getUTCMonth()]};
+const rng=(a,b)=>{const x=new Date(a*864e5),y=new Date(b*864e5);return x.getUTCMonth()===y.getUTCMonth()?x.getUTCDate()+'–'+y.getUTCDate()+' '+MON[y.getUTCMonth()]:fmt(a)+'–'+fmt(b)};
+const iso=n=>new Date(n*864e5).toISOString().slice(0,10);
+const WEEK1=dn('2026-09-14');       // Monday of Week 1
+const S0=WEEK1;                     // Gantt starts at Week 1
+const NWEEKS=18;                  // 16 teaching weeks + 2 finals weeks
+const TEACH=16;
+const NDAYS=NWEEKS*7;               // 14 Sep 2026 - 17 Jan 2027
+const VIZE=dn('2026-10-31');        // First day of the midterm period
+const VIZE_END=dn('2026-11-08');    // Last day of the midterm period
+const FINALS=dn('2027-01-04');      // First day of the finals
+const FINALS_END=dn('2027-01-15');  // Last day of the finals
+const HOLIDAYS=[[dn('2026-10-28'),'Republic Day eve (half day)'],[dn('2026-10-29'),'Republic Day']];
+const now=new Date();
+const TODAY=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())/864e5);
+
+const SCH=[
+ {d:0,s:'10:10',e:'12:30',code:'PHY101',name:'Physics I',room:'HZ-72',who:'Lecturer Dr. Gürkan Ergün'},
+ {d:1,s:'11:00',e:'12:30',code:'CHE107',name:'Chemistry for Engineers',room:'H1-60',who:'Asst. Prof. Dr. Sema Demirci Uzun'},
+ {d:2,s:'10:10',e:'12:30',code:'MAT101',name:'Mathematics I',room:'HZ-72',who:'Assoc. Prof. Dr. Nezihe Turhan Turan'},
+ {d:2,s:'13:30',e:'15:00',code:'PHY101',name:'Physics I',room:'HZ-72',who:'Lecturer Dr. Gürkan Ergün'},
+ {d:2,s:'15:10',e:'16:40',code:'CHE107',name:'Chemistry Laboratory',room:'H2-65 General Chemistry Lab',who:'Asst. Prof. Dr. Sema Demirci Uzun',lab:1},
+ {d:3,s:'08:30',e:'10:00',code:'MAT101',name:'Mathematics I',room:'HZ-72',who:'Assoc. Prof. Dr. Nezihe Turhan Turan'},
+ {d:3,s:'11:00',e:'12:30',code:'EEE101',name:'Intro to Electrical & Electronics Eng.',room:'B1-04',who:'Res. Asst. Dr. İsmail Akdağ'},
+];
+const HUE={MAT101:205,PHY101:25,CHE107:145,EEE101:250,TEN:50,PY:100,AI:310,TUB:175};
+
+function uid(){return Math.random().toString(36).slice(2,9)}
+// Dates are 'MM-DD'; January/February belong to 2027, everything else to 2026.
+const Y=md=>(md<'03'?'2027-':'2026-')+md;
+const mkTasks=a=>a.map(([t,s,e,subs])=>({id:uid(),t,s:Y(s),e:Y(e),open:false,d:false,subs:(subs||[]).map(x=>({t:x,d:false}))}));
+const ERR=['Review the graded midterm','List mistakes by topic','Redo the missed problems'];
+function seed(){
+ const G=(id,name,type,hue,code,tasks)=>({id,name,type,hue,code,open:true,tasks:mkTasks(tasks)});
+ return {tab:'gantt',filter:'all',groups:[
+  G('mat','MAT101 · Mathematics I','okul',HUE.MAT101,'MAT101',[
+   ['Review of Weeks 1–4','10-12','10-14',['Limit rules','Continuity','Homework / practice problems']],
+   ['Differentiation rules','10-15','10-21',['Product and quotient rules','Chain rule','Implicit differentiation']],
+   ['Applications of derivatives','10-22','10-28',['Max–min problems','L\'Hôpital\'s rule','Curve sketching']],
+   ['Introduction to integrals','10-26','10-30',['Indefinite integrals','Substitution method']],
+   ['Midterm practice exam','10-29','10-30',['Solve a practice exam','Review mistakes']],
+   ['Midterm error analysis','11-09','11-11',ERR],
+   ['Definite integrals and Riemann sums','11-09','11-15',['Riemann sums','Properties of the definite integral','Net change and area']],
+   ['Fundamental Theorem of Calculus','11-13','11-20',['FTC part 1','FTC part 2','Evaluation practice']],
+   ['Integration techniques','11-18','11-27',['Substitution for definite integrals','Integration by parts','Mixed practice set']],
+   ['Applications of integration','11-25','12-05',['Area between curves','Volumes of solids of revolution','Average value of a function']],
+   ['Exponential, logarithmic and inverse functions','12-03','12-10',['Inverse functions','Derivatives of exp / log','Mixed problems']],
+   ['Final practice exams','12-10','12-22',['Practice exam 1','Practice exam 2','Review mistakes']],
+   ['Final formula sheet and last review','12-20','01-03',['Make a formula sheet','Redo the hardest problems']],
+   ['FINAL EXAM period','01-04','01-15',['Check the exam date and room','Light review the day before','Take the final exam']]]),
+  G('phy','PHY101 · Physics I','okul',HUE.PHY101,'PHY101',[
+   ['Units and vectors','10-12','10-15',['Unit conversions','Vector addition / components']],
+   ['One-dimensional motion','10-14','10-19',['Velocity and acceleration','Constant-acceleration formulas','Free fall']],
+   ['Two-dimensional motion','10-19','10-24',['Projectile motion','Circular motion']],
+   ['Newton\'s laws of motion','10-23','10-28',['Free-body diagrams','Friction','Inclined plane problems']],
+   ['Work and energy','10-27','10-30',['Work–energy theorem','Conservation of energy']],
+   ['Midterm practice exam','10-29','10-30',['Solve a practice exam','Prepare a formula sheet']],
+   ['Midterm error analysis','11-09','11-11',ERR],
+   ['Momentum and impulse','11-09','11-16',['Impulse–momentum theorem','Conservation of momentum']],
+   ['Collisions and center of mass','11-14','11-21',['Elastic and inelastic collisions','Center of mass']],
+   ['Rotational motion','11-19','11-28',['Angular kinematics','Moment of inertia','Rotational kinetic energy']],
+   ['Torque and angular momentum','11-26','12-05',['Torque and equilibrium','Angular momentum','Rolling motion']],
+   ['Gravitation','12-03','12-09',['Newton\'s law of gravitation','Orbits and energy']],
+   ['Oscillations','12-07','12-16',['Simple harmonic motion','Spring and pendulum','Energy in oscillations']],
+   ['Final practice exams','12-14','12-26',['Practice exam 1','Practice exam 2','Review mistakes']],
+   ['Final formula sheet and last review','12-22','01-03',['Make a formula sheet','Redo the hardest problems']],
+   ['FINAL EXAM period','01-04','01-15',['Check the exam date and room','Light review the day before','Take the final exam']]]),
+  G('che','CHE107 · Chemistry for Engineers','okul',HUE.CHE107,'CHE107',[
+   ['Atomic structure and periodic table','10-12','10-17',['Atomic models','Electron configuration','Periodic trends']],
+   ['Chemical bonding','10-16','10-22',['Ionic / covalent bonds','Lewis structures']],
+   ['Moles and stoichiometry','10-21','10-27',['Mole calculations','Limiting reagent','Percent yield']],
+   ['Gases','10-26','10-30',['Gas laws','Ideal gas equation']],
+   ['Lab handouts and reports (every Wednesday)','10-14','12-23',['Week 5 report','Week 6 report','Week 7 report','Week 9 report','Week 10 report','Week 11 report','Week 12 report','Week 13 report','Week 14 report','Week 15 report']],
+   ['Midterm review','10-29','10-30',['Past questions / practice exam']],
+   ['Midterm error analysis','11-09','11-11',ERR],
+   ['Thermochemistry','11-09','11-17',['Heat and enthalpy','Hess\'s law','Calorimetry']],
+   ['Chemical kinetics','11-15','11-23',['Reaction rates','Rate laws','Activation energy']],
+   ['Chemical equilibrium','11-21','11-30',['Equilibrium constant','Le Châtelier\'s principle','ICE-table problems']],
+   ['Acids and bases','11-28','12-08',['pH and pOH','Weak acids and bases','Buffers and titration']],
+   ['Electrochemistry','12-06','12-15',['Redox reactions','Galvanic cells','Electrolysis and corrosion']],
+   ['Final practice exams','12-14','12-26',['Past questions / practice exam','Review mistakes']],
+   ['Final review','12-22','01-03',['Make a summary sheet','Lab-based questions']],
+   ['FINAL EXAM period','01-04','01-15',['Check the exam date and room','Light review the day before','Take the final exam']]]),
+  G('eee','EEE101 · Intro to Electrical & Electronics Eng.','okul',HUE.EEE101,'EEE101',[
+   ['Basic electrical quantities','10-12','10-18',['Voltage, current, power','Units and prefixes']],
+   ['Ohm\'s and Kirchhoff\'s laws','10-19','10-25',['Ohm\'s law','KCL / KVL']],
+   ['Resistive circuits','10-23','10-29',['Series – parallel','Circuit solving practice']],
+   ['Midterm review','10-29','10-30',['Go over lecture notes','Solve sample problems']],
+   ['Midterm error analysis','11-09','11-11',ERR],
+   ['Nodal and mesh analysis','11-09','11-17',['Nodal analysis','Mesh analysis','Practice circuits']],
+   ['Superposition, Thevenin and Norton','11-15','11-24',['Superposition','Thevenin equivalent','Norton equivalent']],
+   ['Capacitors and inductors','11-22','11-30',['Capacitor behavior','Inductor behavior','Basic RC / RL circuits']],
+   ['Operational amplifiers','11-28','12-06',['Ideal op-amp rules','Inverting / non-inverting amplifiers']],
+   ['AC signals and phasors','12-04','12-13',['Sinusoids','Phasors and impedance','AC power basics']],
+   ['Diodes and semiconductors (intro)','12-11','12-18',['PN junction basics','Diode circuits']],
+   ['Final review','12-17','01-03',['Go over lecture notes','Redo midterm and homework problems','Solve sample problems']],
+   ['FINAL EXAM period','01-04','01-15',['Check the exam date and room','Light review the day before','Take the final exam']]]),
+  G('tub','TÜBİTAK 2209-A · Project Proposal','kisisel',HUE.TUB,null,[
+   ['Topic selection and literature review','10-12','10-18',['Shortlist 2–3 project ideas','Pick the final topic','Read 10+ relevant papers','Summarize related work']],
+   ['Research question, aim and objectives','10-16','10-21',['Write the problem statement','Define the aim and objectives','State the hypothesis / expected outcome']],
+   ['Meet the project advisor','10-19','10-23',['Prepare a one-page summary','Meeting and feedback','Apply the advisor\'s feedback']],
+   ['Methodology','10-21','10-28',['Describe methods and tools','Describe data / experiments','Risk assessment and plan B']],
+   ['Work plan and timeline','10-26','10-30',['Break the project into work packages','Draw the timeline chart']],
+   ['Budget, impact and broader outcomes','10-28','11-03',['Prepare the budget','Expected results and impact','Dissemination plan']],
+   ['Full draft, proofreading and submission','11-02','11-08',['Compile the full draft','Advisor review of the draft','Proofread and check the formatting','Submit the application (check the official call deadline)']],
+   ['After submission: confirm everything','11-09','11-15',['Verify the submission status in the system','Save a PDF copy of all documents']],
+   ['Project kick-off setup','11-16','11-30',['Set up a work folder and notes','Gather tools / data / materials']],
+   ['First experiments / prototype','12-01','12-20',['Run the first tests','Record the results','Discuss progress with the advisor']],
+   ['Progress summary and next steps','12-21','01-03',['Write a one-page progress note','Plan the spring-semester work']]]),
+  G('ten','Touch Typing (10-Finger)','kisisel',HUE.TEN,null,[
+   ['Home row (A S D F – J K L Ş)','10-12','10-15',['Finger placement / home position','Left hand: A S D F','Right hand: J K L Ş','Home-row word drills']],
+   ['Top row (Q W E R T – Y U I O P Ğ Ü)','10-14','10-19',['Left hand top row','Right hand top row','Top + home row words']],
+   ['Bottom row (Z X C V B – N M Ö Ç)','10-18','10-23',['Left hand bottom row','Right hand bottom row','Three-row mixed text']],
+   ['Numbers, punctuation and Shift','10-22','10-27',['Number row','Capital letters / Shift','Punctuation marks']],
+   ['Speed and accuracy goals','10-26','11-08',['30 words/min','40 words/min','95% accuracy']],
+   ['Programming symbols and numbers','11-09','11-22',['Brackets ( ) [ ] { }','Operators + - * / = < >','Quotes, colons and underscores']],
+   ['Reach 50 words/min and 97% accuracy','11-09','12-06',['45 words/min','50 words/min','97% accuracy']],
+   ['Long-text and code typing sessions','12-07','12-27',['20-minute text drills','Type real Python code','One timed test every week']],
+   ['Final speed test','12-21','01-03',['Take the final speed test','Compare with your Week 5 baseline']],
+   ['Daily 15-minute practice','10-12','01-03',['Week 5 · every day','Week 6 · every day','Week 7 · every day','Week 8 · every day','Week 9 · every day','Week 10 · every day','Week 11 · every day','Week 12 · every day','Week 13 · every day','Week 14 · every day','Week 15 · every day','Week 16 · every day']]]),
+  G('py','Python','kisisel',HUE.PY,null,[
+   ['Variables and data types','10-12','10-16',['print / input','int, float, str, bool','Type conversion']],
+   ['Conditionals (if / elif / else)','10-15','10-19',['Comparison operators','Logical operators','Practice problems']],
+   ['Loops (for / while)','10-19','10-24',['for and range()','while, break / continue','Nested loops']],
+   ['Functions','10-23','10-28',['def, parameters, return','Default arguments','Scope']],
+   ['Lists, dictionaries, tuples','10-27','11-02',['List methods','Using dictionaries','List comprehensions']],
+   ['File handling and error handling','11-01','11-06',['open / read / write','try – except']],
+   ['Mini project','11-04','11-08',['Pick an idea','Code it','Upload to GitHub']],
+   ['Object-oriented programming','11-09','11-18',['Classes and objects','Methods and attributes','Inheritance basics']],
+   ['Modules, libraries and virtual environments','11-16','11-22',['import and the standard library','pip and venv']],
+   ['NumPy basics','11-21','12-01',['Arrays and indexing','Vectorized operations','Linear algebra basics']],
+   ['Plotting with Matplotlib','11-29','12-08',['Line and scatter plots','Labels, legends, subplots','Plot a physics experiment']],
+   ['Pandas basics','12-06','12-15',['Load a CSV file','Filter and group data','Simple analysis']],
+   ['Final project: Python for coursework','12-14','01-03',['Pick an idea (e.g. numerical integration, projectile plots)','Code it','Write a README','Upload to GitHub']]]),
+  G('ai','AI Prompting','kisisel',HUE.AI,null,[
+   ['Prompt basics (role · context · task · format)','10-12','10-17',['Write a clear goal','Give role and context','Specify the output format']],
+   ['Teaching by example (few-shot)','10-16','10-21',['Input / output example pairs','Weak vs. strong examples']],
+   ['Step-by-step reasoning and chaining','10-20','10-26',['Ask for step-by-step reasoning','Split multi-step tasks']],
+   ['Controlling output format (table / JSON)','10-25','10-30',['Table output','JSON output','Length and tone control']],
+   ['Prompts for coding in Python','10-29','11-04',['Debugging prompt','Code explanation prompt','Test-writing prompt']],
+   ['Prompt library (mini project)','11-02','11-08',['Collect 10 useful prompts','Sort into categories','Write your own templates']],
+   ['Study prompts (explain · quiz · summarize)','11-09','11-15',['Explanations at your level','Practice-question generator','Summaries of lecture notes']],
+   ['Writing and editing prompts','11-12','11-20',['Lab-report editing','Proposal feedback prompt']],
+   ['Checking AI answers (accuracy and sources)','11-18','11-27',['Spot wrong or invented facts','Ask for sources and verify them','Cross-check with the textbook']],
+   ['Personas and reusable instructions','11-25','12-06',['Write system-style instructions','Build role-based assistants','Test and refine']],
+   ['Using an AI model from Python','12-04','12-15',['Call an API from a script','Send a prompt, read the reply','Handle errors and costs']],
+   ['Final project: personal study assistant','12-14','01-03',['Design the assistant\'s instructions','Build a small script or workflow','Test it on real course material','Write a short usage guide']]])
+ ]};
+}
+
+/* ===================== State ===================== */
+const KEY='study-plan-16w-v2';
+const OLD_KEYS=['study-plan-16w-v1','study-plan-en-v1'];   // earlier versions: carry over ticked items
+function migrate(st){
+  OLD_KEYS.forEach(k=>migrateFrom(st,k));
+}
+function migrateFrom(st,key){
+  try{
+    const o=JSON.parse(localStorage.getItem(key));if(!o||!o.groups)return;
+    o.groups.forEach(og=>{const g=st.groups.find(x=>x.id===og.id);if(!g)return;
+      og.tasks.forEach(ot=>{const t=g.tasks.find(x=>x.t===ot.t);if(!t)return;
+        t.d=!!ot.d;(ot.subs||[]).forEach(os=>{const s=t.subs.find(x=>x.t===os.t);if(s)s.d=!!os.d})})});
+  }catch(e){}
+}
+function load(){
+  try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);if(o&&o.groups)return o}}catch(e){}
+  const st=seed();migrate(st);return st;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+let state=load();
+let gScroll=null;
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tprog=t=>t.subs.length?t.subs.filter(s=>s.d).length/t.subs.length:(t.d?1:0);
+const gprog=g=>g.tasks.length?g.tasks.reduce((a,t)=>a+tprog(t),0)/g.tasks.length:0;
+const typeProg=type=>{const ts=state.groups.filter(g=>g.type===type).flatMap(g=>g.tasks);return ts.length?ts.reduce((a,t)=>a+tprog(t),0)/ts.length:0};
+const pct=x=>Math.round(x*100);
+
+/* ===================== Views ===================== */
+function summary(){
+  const wk=Math.floor((TODAY-WEEK1)/7)+1;
+  let wnow,wsub;
+  if(TODAY<WEEK1){const n=WEEK1-TODAY;wnow='Before Week 1';wsub='Classes start in '+n+(n===1?' day':' days')}
+  else if(wk<=TEACH){wnow='Week '+wk+' of '+TEACH;wsub=rng(WEEK1+(wk-1)*7,WEEK1+(wk-1)*7+6)}
+  else if(wk<=NWEEKS){wnow='Finals · Week '+wk;wsub=rng(WEEK1+(wk-1)*7,WEEK1+(wk-1)*7+6)}
+  else{wnow='After finals';wsub='Makeup exams: 18–24 Jan'}
+  const left=VIZE-TODAY;
+  const vtxt=left>0?left+(left===1?' day':' days'):(TODAY<=VIZE_END?'Midterm period':'Done');
+  const fl=FINALS-TODAY;
+  const ftxt=fl>0?fl+(fl===1?' day':' days'):(TODAY<=FINALS+11?'Finals period':'Done');
+  const o=pct(typeProg('okul')),k=pct(typeProg('kisisel'));
+  return `<div class="cards">
+   <div class="card"><div class="k">Right now</div><div class="v">${wnow}</div><div class="s">${wsub}</div></div>
+   <div class="card"><div class="k">Time until midterms</div><div class="v" style="color:var(--vize)">${vtxt}</div><div class="s">Midterms: ${rng(VIZE,VIZE_END)}</div></div>
+   <div class="card"><div class="k">Time until finals</div><div class="v" style="color:var(--vize)">${ftxt}</div><div class="s">Finals: 4–15 Jan 2027 · Last class day: 29 Dec</div></div>
+   <div class="card" style="--h:215"><div class="k">University courses progress</div><div class="v">${o}%</div><div class="pbar"><i style="width:${o}%"></i></div></div>
+   <div class="card" style="--h:100"><div class="k">Self-study &amp; project progress</div><div class="v">${k}%</div><div class="pbar"><i style="width:${k}%"></i></div></div>
+  </div>`;
+}
+
+function ganttView(){
+  const groups=state.groups.filter(g=>state.filter==='all'||g.type===state.filter);
+  let wk='',dy='';
+  const midW=Math.floor((VIZE_END-WEEK1)/7);  // index of the week that holds the end of the midterm period
+  for(let w=0;w<NWEEKS;w++){
+    const a=S0+w*7,past=a+6<TODAY;
+    const cls=(w===midW||w>=TEACH)?'vz':past?'past':'';
+    const extra=w===midW?' · MIDTERMS':w>=TEACH?' · FINALS':'';
+    wk+=`<div class="wk ${cls}" style="width:calc(7*var(--dw))">Week ${w+1} · ${rng(a,a+6)}${extra}</div>`;
+  }
+  const ini=['Mo','Tu','We','Th','Fr','Sa','Su'];
+  for(let i=0;i<NDAYS;i++){const n=S0+i;const hol=HOLIDAYS.some(h=>h[0]===n);
+    dy+=`<div class="dy ${i%7>4?'we':''} ${hol?'hol':''} ${n===TODAY?'td':''}">${ini[i%7]}<b>${new Date(n*864e5).getUTCDate()}</b></div>`}
+  const bar=(s,e,p,label,cls,title)=>{
+    const a=dn(s)-S0,b=dn(e)-S0;if(b<0||a>=NDAYS)return '';
+    const l=Math.max(a,0),r=Math.min(b,NDAYS-1),len=r-l+1;
+    const lbl=len>=3?`<span>${label}</span>`:'';
+    return `<div class="bar ${cls}" style="left:calc(${l}*var(--dw) + 1px);width:calc(${len}*var(--dw) - 2px)" title="${esc(title)}"><i style="width:${pct(p)}%"></i>${lbl}</div>`};
+  let rows='';
+  groups.forEach(g=>{
+    const p=gprog(g);
+    const mn=g.tasks.length?g.tasks.reduce((a,t)=>t.s<a?t.s:a,g.tasks[0].s):null;
+    const mx=g.tasks.length?g.tasks.reduce((a,t)=>t.e>a?t.e:a,g.tasks[0].e):null;
+    rows+=`<div class="g-row g-group" style="--h:${g.hue}" data-act="gopen" data-g="${g.id}">
+      <div class="g-label"><span class="caret ${g.open?'open':''}">▶</span><span class="dot"></span><span class="g-name">${esc(g.name)}</span><span class="g-pct">${pct(p)}%</span></div>
+      <div class="g-track">${mn?bar(mn,mx,p,'','sum',g.name+' · '+pct(p)+'%'):''}</div></div>`;
+    if(g.open)g.tasks.forEach(t=>{
+      const tp=tprog(t);
+      rows+=`<div class="g-row g-task" style="--h:${g.hue}">
+        <div class="g-label"><span class="g-name">${esc(t.t)}<small>${fmt(dn(t.s))} – ${fmt(dn(t.e))}</small></span></div>
+        <div class="g-track">${bar(t.s,t.e,tp,tp>=1?'✓':pct(tp)+'%','',t.t+' · '+fmt(dn(t.s))+' – '+fmt(dn(t.e))+' · '+pct(tp)+'%')}</div></div>`;
+    });
+  });
+  if(!groups.length)rows='<div style="padding:20px;color:var(--muted)">Nothing to show.</div>';
+  const pastDays=Math.min(NDAYS,Math.max(0,TODAY-S0));
+  const pastOv=pastDays?`<div class="past" style="width:calc(${pastDays}*var(--dw))"></div>`:'';
+  const holOv=HOLIDAYS.map(h=>`<div class="hol" style="left:calc(${h[0]-S0}*var(--dw));width:var(--dw)"></div>`).join('');
+  const vzOv=`<div class="vz" style="left:calc(${VIZE-S0}*var(--dw));width:calc(${VIZE_END-VIZE+1}*var(--dw))"></div>`;
+  const finOv=`<div class="vz" style="left:calc(${FINALS-S0}*var(--dw));width:calc(${FINALS_END-FINALS+1}*var(--dw))"></div>`;
+  const nowLine=(TODAY>=S0&&TODAY<S0+NDAYS)?`<div class="now" style="left:calc(${TODAY-S0}*var(--dw) + var(--dw)/2 - 1px)"></div>`:'';
+  const f=(v,t)=>`<button class="chip" data-act="filter" data-v="${v}" aria-pressed="${state.filter===v}">${t}</button>`;
+  return `<div class="toolbar">${f('all','All')}${f('okul','University courses')}${f('kisisel','TÜBİTAK · Typing · Python · AI')}</div>
+  <div class="gantt"><div class="g-in">
+    <div class="g-head">
+      <div class="g-row hd"><div class="g-label"><b style="font-size:12px">Topic</b></div>${wk}</div>
+      <div class="g-row"><div class="g-label" style="color:var(--muted);font-size:12px">Click a heading to expand / collapse</div>${dy}</div>
+    </div>
+    <div class="g-ov">${pastOv}${vzOv}${finOv}${holOv}${nowLine}</div>
+    ${rows}
+  </div></div>
+  <div class="legend"><span><b style="background:hsl(220 70% 50%/.25);border:1px solid hsl(220 70% 50%/.7)"></b>Planned period</span><span><b style="background:hsl(220 70% 46%)"></b>Completed part</span><span><b style="background:rgba(217,45,32,.18);border:1px dashed var(--vize)"></b>Midterms (31 Oct – 8 Nov) and finals (4 – 15 Jan)</span><span><b style="background:rgba(217,45,32,.18)"></b>28 Oct (half day) &amp; 29 Oct: Republic Day</span><span><b style="background:var(--past);border:1px solid var(--line)"></b>Past days</span><span>Progress comes from the checkboxes in the "University Courses" and "Projects &amp; Self-Study" tabs. Weeks 17–18 are the finals period; makeup exams (bütünleme) are 18–24 Jan.</span></div>`;
+}
+
+function scheduleView(){
+  const PX=46,T0=480,T1=1320,y=m=>(m-T0)*PX/60;
+  const dur=m=>Math.floor(m/60)+' h'+(m%60?' '+(m%60)+' min':'');
+  let labMin=0,clsPeriods=0,cols='',head='<div class="sch-h"></div>';
+  const todayIdx=(new Date().getDay()+6)%7;
+  for(let d=0;d<7;d++){
+    const cl=SCH.filter(c=>c.d===d).sort((a,b)=>tm(a.s)-tm(b.s));
+    let h='',cur=tm('08:30');const end=tm('18:00'),labs=[];
+    cl.forEach(c=>{if(tm(c.s)>cur)labs.push([cur,tm(c.s)]);cur=Math.max(cur,tm(c.e));clsPeriods+=Math.round((tm(c.e)-tm(c.s)+10)/50)});
+    if(cur<end)labs.push([cur,end]);
+    labs.forEach(([a,b])=>{labMin+=b-a;h+=`<div class="blk lab" style="top:${y(a)}px;height:${y(b)-y(a)-2}px"><span>🧠 AI Lab${b-a>=90?` <em>${dur(b-a)}</em>`:''}</span></div>`});
+    cl.forEach(c=>{const hue=HUE[c.code]||220;
+      h+=`<div class="blk cls" style="--h:${hue};top:${y(tm(c.s))}px;height:${y(tm(c.e))-y(tm(c.s))-2}px" title="${esc(c.name+' · '+c.room+' · '+c.who)}"><b>${c.code}${c.lab?' · Lab':''}</b>${esc(c.name)}<small>${c.s}–${c.e} · ${esc(c.room)}</small><small>${esc(c.who)}</small></div>`});
+    h+=`<div class="blk free" style="top:${y(end)+2}px;height:${y(T1)-y(end)-4}px"><span>Free / study time <em>18:00 →</em></span></div>`;
+    cols+=`<div class="sch-col ${d>4?'we':''}">${h}</div>`;
+    head+=`<div class="sch-h ${d===todayIdx?'today':''}">${DAYS[d]}</div>`;
+  }
+  let gut='';for(let m=T0;m<=T1;m+=60)gut+=`<span style="top:${y(m)}px">${String(m/60).padStart(2,'0')}:00</span>`;
+  const evening=7*(T1-tm('18:00'));
+  return `<div class="cards">
+    <div class="card"><div class="k">Weekly class load</div><div class="v">${clsPeriods} class periods</div><div class="s">40-minute periods, labs included</div></div>
+    <div class="card"><div class="k">AI Lab (08:30–18:00)</div><div class="v">${Math.round(labMin/6)/10} hours / week</div><div class="s">Every free moment between classes, weekends included</div></div>
+    <div class="card"><div class="k">Free evening time</div><div class="v">${Math.round(evening/6)/10} hours / week</div><div class="s">18:00–22:00 (22:00 is an assumption)</div></div>
+  </div>
+  <div class="sch-wrap"><div class="sch">${head}<div class="sch-gut" style="grid-row:2;grid-column:1">${gut}</div>${cols}</div></div>
+  <div class="note">Class times are taken from your timetable (14 Sep – 29 Dec 2026). Blue-grey blocks are your AI Lab time; the dashed yellow areas are the free evening hours after the lab.</div>`;
+}
+
+function courseMeta(code){
+  if(!code)return '';
+  const rows=SCH.filter(c=>c.code===code).sort((a,b)=>a.d-b.d||tm(a.s)-tm(b.s));
+  const tags=rows.map(c=>`<span class="tag">${DAYS[c.d]} ${c.s}–${c.e}${c.lab?' (Lab)':''} · ${esc(c.room)}</span>`);
+  if(rows[0])tags.push(`<span class="tag">${esc(rows[0].who)}</span>`);
+  return `<div class="meta">${tags.join('')}</div>`;
+}
+
+function listView(type){
+  const gs=state.groups.filter(g=>g.type===type);
+  const intro=type==='okul'
+    ?'The topic headings are examples; adjust the dates, and add or delete topics to match your own syllabus. Changes are saved automatically in this browser. Topics start collapsed — click the arrow to open the sub-topics.'
+    :'Tick the sub-topics under each heading and the Gantt bars fill up accordingly. You can edit dates, topics and sub-topics.';
+  const defS=iso(Math.max(TODAY,S0)),defE=iso(Math.max(TODAY,S0)+6);
+  return `<div class="note" style="margin-top:0">${intro}</div>`+gs.map(g=>{
+    const p=gprog(g);
+    const tasks=g.tasks.map(t=>{
+      const tp=tprog(t);
+      const subs=t.open?`<div class="subs" style="--h:${g.hue}">${t.subs.map((s,i)=>`
+        <div class="srow ${s.d?'done':''}"><input type="checkbox" data-act="stoggle" data-g="${g.id}" data-t="${t.id}" data-i="${i}" ${s.d?'checked':''}><span>${esc(s.t)}</span><button class="ib" title="Delete sub-topic" data-act="sdel" data-g="${g.id}" data-t="${t.id}" data-i="${i}">×</button></div>`).join('')}
+        <form class="add" data-form="sub" data-g="${g.id}" data-t="${t.id}"><input type="text" name="t" placeholder="Add a sub-topic…" autocomplete="off"><button class="btn" type="submit">Add</button></form></div>`:'';
+      return `<div class="trow ${tp>=1?'done':''}" style="--h:${g.hue}">
+        <input type="checkbox" data-act="ttoggle" data-g="${g.id}" data-t="${t.id}" ${tp>=1?'checked':''} ${tp>0&&tp<1?'data-indet="1"':''}>
+        <span class="tt">${esc(t.t)}</span>
+        <span class="dates"><input type="date" value="${t.s}" data-act="date" data-f="s" data-g="${g.id}" data-t="${t.id}"> → <input type="date" value="${t.e}" data-act="date" data-f="e" data-g="${g.id}" data-t="${t.id}"></span>
+        <span class="mini">${t.subs.length?t.subs.filter(s=>s.d).length+'/'+t.subs.length+' · ':''}${pct(tp)}%</span>
+        <button class="ib" title="Expand / collapse sub-topics" data-act="topen" data-g="${g.id}" data-t="${t.id}">${t.open?'▾':'▸'}</button>
+        <button class="ib" title="Delete topic" data-act="tdel" data-g="${g.id}" data-t="${t.id}">🗑</button>
+      </div>${subs}`}).join('');
+    return `<section class="gcard" style="--h:${g.hue}">
+      <div class="gh" data-act="gopen" data-g="${g.id}"><span class="caret ${g.open?'open':''}">▶</span><span class="dot"></span><h3>${esc(g.name)}</h3><span class="pb"><div class="pbar" style="margin:0"><i style="width:${pct(p)}%"></i></div></span><span class="pc">${pct(p)}%</span></div>
+      ${courseMeta(g.code)}
+      ${g.open?`<div class="gb">${tasks||'<div class="note">No topics yet.</div>'}
+        <form class="add task" data-form="task" data-g="${g.id}"><input type="text" name="t" placeholder="New topic title…" autocomplete="off" required><input type="date" name="s" value="${defS}" required><input type="date" name="e" value="${defE}" required><button class="btn" type="submit">Add topic</button></form></div>`:''}
+    </section>`}).join('');
+}
+
+const TABS=[['gantt','Gantt Chart'],['program','Weekly Timetable'],['kisisel','Projects & Self-Study (TÜBİTAK · Typing · Python · AI)'],['okul','University Courses']];
+function render(){
+  const body=state.tab==='gantt'?ganttView():state.tab==='program'?scheduleView():listView(state.tab);
+  document.getElementById('app').innerHTML=(state.tab==='program'?'':summary())+`<div class="tabs" role="tablist">${TABS.map(([k,t])=>`<button class="tab" role="tab" aria-selected="${state.tab===k}" data-act="tab" data-v="${k}">${t}</button>`).join('')}</div>`+body;
+  document.querySelectorAll('input[data-indet]').forEach(i=>i.indeterminate=true);
+  const g2=document.querySelector('.gantt');
+  if(g2){
+    if(!gScroll){  // first open: scroll so that today is at the left edge
+      const dw=parseFloat(getComputedStyle(g2).getPropertyValue('--dw'))||30;
+      gScroll=[TODAY>S0&&TODAY<S0+NDAYS?Math.max(0,(TODAY-S0-1)*dw):0,0];
+    }
+    g2.scrollLeft=gScroll[0];g2.scrollTop=gScroll[1];
+  }
+}
+
+/* ===================== Events ===================== */
+document.addEventListener('scroll',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('gantt'))gScroll=[t.scrollLeft,t.scrollTop]},true);
+function act(el){
+  const a=el.dataset.act,g=state.groups.find(x=>x.id===el.dataset.g),t=g&&g.tasks.find(x=>x.id===el.dataset.t);
+  switch(a){
+    case 'tab':state.tab=el.dataset.v;break;
+    case 'filter':state.filter=el.dataset.v;break;
+    case 'gopen':g.open=!g.open;break;
+    case 'topen':t.open=!t.open;break;
+    case 'ttoggle':if(t.subs.length)t.subs.forEach(s=>s.d=el.checked);else t.d=el.checked;break;
+    case 'stoggle':t.subs[+el.dataset.i].d=el.checked;break;
+    case 'sdel':t.subs.splice(+el.dataset.i,1);break;
+    case 'tdel':if(!confirm('Delete this topic?'))return;g.tasks=g.tasks.filter(x=>x!==t);break;
+    case 'date':if(!el.value)return;t[el.dataset.f]=el.value;if(t.e<t.s){if(el.dataset.f==='s')t.e=t.s;else t.s=t.e}break;
+    case 'reset':if(!confirm('All progress and edits will be erased and the plan restored to its original state. Are you sure?'))return;state=seed();break;
+    default:return;
+  }
+  save();render();
+}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.tagName==='INPUT')return;act(el)});
+document.addEventListener('change',e=>{const el=e.target.closest('input[data-act]');if(el)act(el)});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();
+  const g=state.groups.find(x=>x.id===f.dataset.g);if(!g)return;
+  const txt=f.elements.t.value.trim();if(!txt)return;
+  if(f.dataset.form==='sub'){const t=g.tasks.find(x=>x.id===f.dataset.t);t.subs.push({t:txt,d:false});t.open=true}
+  else{let s=f.elements.s.value,en=f.elements.e.value;if(en<s)en=s;g.tasks.push({id:uid(),t:txt,s,e:en,open:true,d:false,subs:[]})}
+  save();render();
+});
+render();
+</script>
+</body>
+</html>
